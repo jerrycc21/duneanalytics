@@ -78,8 +78,8 @@ dune.fetch_auth_token()
 # https://duneanalytics.com/queries/3705/7192 => 3705
 # https://duneanalytics.com/queries/3751/7276 => 3751
 
-result_id = dune.query_result_id(query_id=5508)
+result_id, error_id = dune.query_result_id(query_id=5508)
 
 # fetch query result
-data = dune.query_result(result_id)
+data = dune.query_result(result_id, error_id)
 ```
