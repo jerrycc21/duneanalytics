@@ -106,22 +106,24 @@ class DuneAnalytics:
             if 'errors' in data:
                 return None
             result_id = data.get('data').get('get_result_v2').get('result_id')
-            return result_id
+            error_id = data.get('data').get('get_result_v2').get('error_id')
+            return result_id, error_id
         else:
             print(response.text)
             return None
 
-    def query_result(self, result_id):
+    def query_result(self, result_id, error_id):
         """
         Fetch the result for a query
         :param result_id: result id of the query
         :return:
         """
         query_data = {"operationName": "FindResultDataByResult",
-                      "variables": {"result_id": result_id},
-                      "query": "query FindResultDataByResult($result_id: uuid!) "
+                      "variables": {"result_id": result_id, "error_id": error_id},
+                      "query": "query FindResultDataByResult($result_id: uuid!, $error_id: uuid!) "
                                "{\n  query_results(where: {id: {_eq: $result_id}}) "
-                               "{\n    id\n    job_id\n    error\n    runtime\n    generated_at\n    columns\n    __typename\n  }"
+                               "{\n    id\n    job_id\n    runtime\n    generated_at\n    columns\n    __typename\n  }"
+                               "\n  query_errors(where: {id: {_eq: $error_id}}) {\n    id\n    job_id\n    runtime\n    message\n    metadata\n    type\n    generated_at\n    __typename\n  }"
                                "\n  get_result_by_result_id(args: {want_result_id: $result_id}) {\n    data\n    __typename\n  }\n}\n"
                       }
 
